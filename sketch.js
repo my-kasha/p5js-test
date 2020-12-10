@@ -38,7 +38,11 @@ function draw() {
     for (let j = 0; j < rows; j++) {
       let x = i * resolution;
       let y = j * resolution;
-      if (grid[i][j] == 1) {
+	  if(grid[i][j] == 0){
+		fill(0);
+        stroke(0);
+        rect(x, y, resolution - 1, resolution - 1);	// create rectabgle 9x9 
+      }else if (grid[i][j] == 1) {
         fill(255);
         stroke(0);
         rect(x, y, resolution - 1, resolution - 1);	// create rectabgle 9x9 
@@ -59,22 +63,37 @@ function draw() {
       let state = grid[i][j];
       // Count live neighbors!
       let sum = 0;
-      let neighbors = countNeighbors(grid, i, j);
+      let neighbors0 = countNeighbors0(grid, i, j);
+	  let neighbors1 = countNeighbors1(grid, i, j);
+	  let neighbors2 = countNeighbors2(grid, i, j);
 
-      if (state == 0 && neighbors == 3) {
+	  if(state == 0 && neighbors1 > 2 ){
+		  next[i][j] = 1;
+	  }else if( state == 1 && neighbors2 > 2){
+		  next[i][j] = 2;
+	  }else if (state == 2 && neighbors0 > 2){
+		  next[i][j] = 0;
+	  }else {
+		  next[i][j] = state;
+	  }
+	  
+	  /***
+	  // блок правил для класики
+      if (state == 0 && neighbors1 == 3) {
         next[i][j] = 1;
-      } else if (state == 1 && (neighbors < 2 || neighbors > 3)) {
+      } else if (state == 1 && (neighbors1 < 2 || neighbors1 > 3)) {
         next[i][j] = 0;
       } else {
         next[i][j] = state;
-      }
+      }// кінець блоку правил для класики
+	  ***/
     }
   }
 
   grid = next;//***/	// meke our changes in state an reality for mane var grid
 }
 
-function countNeighbors(grid, x, y) { // smth vierd is going here
+function countNeighbors0(grid, x, y) { // smth vierd is going here
   let sum = 0;							// but i could see `borders` of computable blocks
   for (let i = -1; i < 2; i++) {
     for (let j = -1; j < 2; j++) {
@@ -82,9 +101,26 @@ function countNeighbors(grid, x, y) { // smth vierd is going here
 		let col = (x + i + cols) % cols;
 		let row = (y + j + rows) % rows;
 		  
-		if(grid[col][row] == 1){
+		if(grid[col][row] == 0 ){
 		  sum += 1;
-		]
+		}
+    }
+  }
+  sum -= !(grid[x][y]);
+  return sum;
+}
+
+function countNeighbors1(grid, x, y) { // smth vierd is going here
+  let sum = 0;							// but i could see `borders` of computable blocks
+  for (let i = -1; i < 2; i++) {
+    for (let j = -1; j < 2; j++) {
+		
+		let col = (x + i + cols) % cols;
+		let row = (y + j + rows) % rows;
+		  
+		if(grid[col][row] == 1 ){
+		  sum += 1;
+		}
     }
   }
   sum -= grid[x][y];
@@ -95,12 +131,15 @@ function countNeighbors2(grid, x, y) { // smth vierd is going here
   let sum = 0;							// but i could see `borders` of computable blocks
   for (let i = -1; i < 2; i++) {
     for (let j = -1; j < 2; j++) {
-      let col = (x + i + cols) % cols;
-      let row = (y + j + rows) % rows;
-      sum += grid[col][row];
+		
+		let col = (x + i + cols) % cols;
+		let row = (y + j + rows) % rows;
+		  
+		if(grid[col][row] == 2 ){
+		  sum += 1;
+		}
     }
   }
-  sum -= grid[x][y];
-  sum = sum/2;
+  sum -= ((grid[x][y])/2);
   return sum;
 }
