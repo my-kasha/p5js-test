@@ -19,14 +19,14 @@ let rows;
 let resolution = 10;
 
 function setup() {
-  createCanvas(1800, 1800);
+  createCanvas(1800, 800);
   cols = width / resolution;
   rows = height / resolution;
 
   grid = make2DArray(cols, rows);
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      grid[i][j] = floor(random(2));
+      grid[i][j] = floor(random(3));
     }
   }
 }
@@ -42,10 +42,14 @@ function draw() {
         fill(255);
         stroke(0);
         rect(x, y, resolution - 1, resolution - 1);
-      }
+      }else if(grid[i][j] == 2){
+		fill(124);
+        stroke(0);
+        rect(x, y, resolution - 1, resolution - 1); 
+	  }
     }
   }
-
+///***
   let next = make2DArray(cols, rows);
 
   // Compute next based on grid
@@ -66,7 +70,7 @@ function draw() {
     }
   }
 
-  grid = next;
+  grid = next;//***/
 }
 
 function countNeighbors(grid, x, y) {
