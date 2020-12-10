@@ -16,7 +16,7 @@ function make2DArray(cols, rows) {
 let grid;
 let cols;
 let rows;
-let resolution = 10;
+let resolution = 1;
 
 function setup() {
   createCanvas(600, 800);
